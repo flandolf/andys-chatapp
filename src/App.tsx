@@ -6,7 +6,12 @@ import ChatPage from "@/pages/chat-page";
 import Spinner from "@/components/spinner";
 
 const firebaseConfig = {
-  // Your Firebase config
+  apiKey: "AIzaSyAZxddMlIM1JdUR-BzmrI01weJ18dUMSeg",
+  authDomain: "shadcnchat.firebaseapp.com",
+  projectId: "shadcnchat",
+  storageBucket: "shadcnchat.appspot.com",
+  messagingSenderId: "925622473788",
+  appId: "1:925622473788:web:5d31cca96292b0722a9f39",
 };
 
 const app = initializeApp(firebaseConfig);
