@@ -27,9 +27,11 @@ function LoginPage() {
   const login = async () => {
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      await updateProfile(auth.currentUser!, {
-        displayName: email,
-      });
+      if (auth.currentUser?.displayName === null) {
+        await updateProfile(auth.currentUser!, {
+          displayName: email,
+        });
+      }
     } catch (e) {
       console.error(e);
     }
