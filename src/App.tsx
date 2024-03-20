@@ -35,7 +35,11 @@ function App() {
   }, []);
 
   if (loading) {
-    return <Spinner />;
+    return (
+      <div className="flex flex-col justify-center align-middle">
+        <Spinner />
+      </div>
+    );
   }
 
   return <div>{user ? <ChatPage /> : <LoginPage />}</div>;

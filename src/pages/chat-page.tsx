@@ -25,6 +25,7 @@ import {
   AlertDialogFooter,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { ModeToggle } from "@/components/mode-toggle";
 
 interface Message {
   id: string;
@@ -74,22 +75,19 @@ export function ChatPage() {
 
   useEffect(() => {
     const q = query(messagesCollection, orderBy("timestamp", "asc"));
-    const unsubscribe = onSnapshot(
-      q,
-      (querySnapshot: QuerySnapshot) => {
-        const updatedMessages: Message[] = [];
-        querySnapshot.forEach((doc) => {
-          updatedMessages.push({
-            id: doc.id,
-            text: doc.data().text,
-            timestamp: doc.data().timestamp,
-            senderId: doc.data().senderId,
-            username: doc.data().username,
-          });
+    const unsubscribe = onSnapshot(q, (querySnapshot: QuerySnapshot) => {
+      const updatedMessages: Message[] = [];
+      querySnapshot.forEach((doc) => {
+        updatedMessages.push({
+          id: doc.id,
+          text: doc.data().text,
+          timestamp: doc.data().timestamp,
+          senderId: doc.data().senderId,
+          username: doc.data().username,
         });
-        setMessages(updatedMessages);
-      }
-    );
+      });
+      setMessages(updatedMessages);
+    });
 
     const unsubscribeAuth = auth.onAuthStateChanged((user) => {
       setCurrentUser(user ? { email: user.email } : null);
@@ -142,15 +140,24 @@ export function ChatPage() {
                   </AlertDialogContent>
                 </AlertDialog>
               </div>
-              <Button
-                size="sm"
-                className="ml-auto"
-                onClick={() => {
-                  auth.signOut();
-                }}
+              <div
+                className="
+                flex
+                items-center
+                gap-2
+                ml-auto"
               >
-                Log out
-              </Button>
+                <ModeToggle />
+                <Button
+                  size="sm"
+                  className="ml-auto"
+                  onClick={() => {
+                    auth.signOut();
+                  }}
+                >
+                  Log out
+                </Button>
+              </div>
             </div>
             <div className="flex-1 flex flex-col justify-end gap-4 p-4">
               {messages.map((message) => (

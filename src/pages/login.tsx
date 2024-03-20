@@ -1,3 +1,11 @@
+const firebaseConfig = {
+  apiKey: "AIzaSyAZxddMlIM1JdUR-BzmrI01weJ18dUMSeg",
+  authDomain: "shadcnchat.firebaseapp.com",
+  projectId: "shadcnchat",
+  storageBucket: "shadcnchat.appspot.com",
+  messagingSenderId: "925622473788",
+  appId: "1:925622473788:web:5d31cca96292b0722a9f39",
+};
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
@@ -8,14 +16,6 @@ import {
 } from "firebase/auth";
 import { initializeApp } from "firebase/app";
 import { useState } from "react";
-const firebaseConfig = {
-  apiKey: "AIzaSyAZxddMlIM1JdUR-BzmrI01weJ18dUMSeg",
-  authDomain: "shadcnchat.firebaseapp.com",
-  projectId: "shadcnchat",
-  storageBucket: "shadcnchat.appspot.com",
-  messagingSenderId: "925622473788",
-  appId: "1:925622473788:web:5d31cca96292b0722a9f39",
-};
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
@@ -49,13 +49,13 @@ function LoginPage() {
   };
 
   return (
-    <div className="flex flex-row">
-      <div className="w-1/2 h-screen bg-neutral-900 p-20">
+    <div className="flex flex-col md:flex-row">
+      <div className="w-full md:w-1/2 bg-neutral-900 p-6 md:p-20 md:h-screen">
         <h1 className="text-3xl font-semibold">shadcn chat</h1>
         <p>by flandolf.</p>
-        <p className="absolute bottom-20 left-20 font-semibold">(c) 2024</p>
+        <p className="absolute bottom-6 left-6 font-semibold">(c) 2024</p>
       </div>
-      <div className="w-1/2 h-screen p-20 flex flex-col justify-center align-middle space-y-3 ">
+      <div className="w-full md:w-1/2 p-6 md:p-20 flex flex-col justify-center space-y-6 md:h-screen">
         <p className="text-3xl font-semibold">Login</p>
         <div>
           <p className="text-neutral-500">Email</p>
@@ -75,7 +75,7 @@ function LoginPage() {
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>
-        <div className="flex flex-row space-x-3">
+        <div className="flex flex-col md:flex-row md:justify-start space-y-3 md:space-x-3 md:space-y-0 align-middle">
           <Button onClick={login}>Login</Button>
           <Button onClick={signUp}>Sign Up</Button>
         </div>
