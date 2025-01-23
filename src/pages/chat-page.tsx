@@ -1,5 +1,6 @@
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { firebaseConfig } from "../../firebaseConfig";
 
 import { getAuth, updateProfile } from "firebase/auth";
 import { initializeApp } from "firebase/app";
@@ -42,15 +43,6 @@ interface Message {
 interface UserData {
   email: string | null;
 }
-
-const firebaseConfig = {
-  apiKey: "AIzaSyAZxddMlIM1JdUR-BzmrI01weJ18dUMSeg",
-  authDomain: "shadcnchat.firebaseapp.com",
-  projectId: "shadcnchat",
-  storageBucket: "shadcnchat.appspot.com",
-  messagingSenderId: "925622473788",
-  appId: "1:925622473788:web:5d31cca96292b0722a9f39",
-};
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
