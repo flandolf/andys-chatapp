@@ -59,7 +59,7 @@ function LoginPage() {
   return (
     <div className="flex flex-col md:flex-row">
       {showAlert && (
-        <div className="absolute top-6 right-6">
+        <div className="absolute top-6 right-6 animate-slide-in">
           <Alert>
             <AlertTitle>Error</AlertTitle>
             <AlertDescription>{alertMessage}</AlertDescription>
