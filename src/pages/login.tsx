@@ -50,14 +50,14 @@ function LoginPage() {
 
   return (
     <div className="flex flex-col md:flex-row">
-      <div className="w-full md:w-1/2 bg-neutral-900 p-6 md:p-20 md:h-screen">
+      <div className="w-full md:w-1/2 bg-background p-6 md:p-20 md:h-screen border-r">
         <h1 className="text-3xl font-semibold">andy's chat</h1>
-        <p className="absolute bottom-6 left-6 font-semibold">(c) 2025</p>
+        <p className="absolute bottom-6 left-6 font-semibold text-muted-foreground">(c) 2025</p>
       </div>
       <div className="w-full md:w-1/2 p-6 md:p-20 flex flex-col justify-center space-y-6 md:h-screen">
         <p className="text-3xl font-semibold">Login</p>
         <div>
-          <p className="text-neutral-500">Email</p>
+          <p className="text-muted-foreground">Email</p>
           <Input
             placeholder="Email"
             type="email"
@@ -66,7 +66,7 @@ function LoginPage() {
           />
         </div>
         <div>
-          <p className="text-neutral-500">Password</p>
+          <p className="text-muted-foreground">Password</p>
           <Input
             placeholder="Password"
             type="password"
@@ -76,7 +76,7 @@ function LoginPage() {
         </div>
         <div className="flex flex-col md:flex-row md:justify-start space-y-3 md:space-x-3 md:space-y-0 align-middle">
           <Button onClick={login}>Login</Button>
-          <Button onClick={signUp}>Sign Up</Button>
+          <Button variant="outline" onClick={signUp}>Sign Up</Button>
         </div>
       </div>
     </div>

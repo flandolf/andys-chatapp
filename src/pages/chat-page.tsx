@@ -157,6 +157,7 @@ export function ChatPage() {
               </div>
             </AlertDialogContent>
           </AlertDialog>
+          <Button onClick={() => auth.signOut()}>Logout</Button>
           <ModeToggle />
         </div>
       </div>
