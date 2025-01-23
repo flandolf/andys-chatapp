@@ -10,6 +10,7 @@ import {
 } from "firebase/auth";
 import { initializeApp } from "firebase/app";
 import { useState } from "react";
+import { ModeToggle } from "@/components/mode-toggle";
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
@@ -47,6 +48,9 @@ function LoginPage() {
       <div className="w-full md:w-1/2 bg-background p-6 md:p-20 md:h-screen border-r">
         <h1 className="text-3xl font-semibold">andy's chat</h1>
         <p className="absolute bottom-6 left-6 font-semibold text-muted-foreground">(c) 2025</p>
+        <div className="absolute bottom-6 right-6">
+          <ModeToggle />
+        </div>
       </div>
       <div className="w-full md:w-1/2 p-6 md:p-20 flex flex-col justify-center space-y-6 md:h-screen">
         <p className="text-3xl font-semibold">Login</p>

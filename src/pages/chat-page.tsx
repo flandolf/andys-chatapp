@@ -1,7 +1,6 @@
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { firebaseConfig } from "../../firebaseConfig";
-
 import { getAuth, updateProfile } from "firebase/auth";
 import { initializeApp } from "firebase/app";
 import {
@@ -15,30 +14,11 @@ import {
   deleteDoc,
   doc,
 } from "firebase/firestore";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { SendHorizontal } from "lucide-react";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-import { ModeToggle } from "@/components/mode-toggle";
-import {
-  ContextMenu,
-  ContextMenuContent,
-  ContextMenuItem,
-  ContextMenuTrigger,
-} from "@/components/ui/context-menu";
-
-interface Message {
-  id: string;
-  text: string;
-  timestamp: Date;
-  username: string;
-  senderId: string;
-}
+import { ChatHeader } from "@/components/chat/chat-header";
+import { MessageList } from "@/components/chat/message-list";
+import { Message } from "@/types/message";
 
 interface UserData {
   email: string | null;
@@ -54,8 +34,6 @@ export function ChatPage() {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_, setCurrentUser] = useState<UserData | null>(null);
   const [username, setUsername] = useState<string>("");
-  const messagesEndRef = useRef<HTMLDivElement>(null);
-
   const sendMessage = async () => {
     if (message.trim() !== "") {
       await addDoc(messagesCollection, {
@@ -105,12 +83,6 @@ export function ChatPage() {
     };
   }, []);
 
-  useEffect(() => {
-    if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
-    }
-  }, [messages]);
-
   const handleChangeUsername = async () => {
     if (auth.currentUser) {
       await updateProfile(auth.currentUser, { displayName: username }); // Update the username
@@ -128,88 +100,18 @@ export function ChatPage() {
 
   return (
     <div className="flex h-screen flex-col bg-gray-100 dark:bg-black">
-      <div className="flex items-center justify-between p-4 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <h1 className="text-xl font-semibold">Chat</h1>
-        <div className="flex items-center gap-4">
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <Button variant="outline">Change Username</Button>
-            </AlertDialogTrigger>
-            <AlertDialogContent>
-              <div className="flex gap-4">
-                <Input
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  placeholder="New username"
-                />
-                <AlertDialogAction onClick={handleChangeUsername}>
-                  Save
-                </AlertDialogAction>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
-              </div>
-            </AlertDialogContent>
-          </AlertDialog>
-          <Button onClick={() => auth.signOut()}>Logout</Button>
-          <ModeToggle />
-        </div>
-      </div>
+      <ChatHeader
+        username={username}
+        onUsernameChange={(e) => setUsername(e.target.value)}
+        onSaveUsername={handleChangeUsername}
+        onLogout={() => auth.signOut()}
+      />
 
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
-        {messages.map((msg) => (
-          <div
-            key={msg.id}
-            className={`flex ${
-              msg.senderId === auth.currentUser?.uid
-                ? "justify-end"
-                : "justify-start"
-            }`}
-          >
-            {msg.senderId === auth.currentUser?.uid ? (
-              <ContextMenu>
-                <ContextMenuTrigger>
-                  <div
-                    className={`rounded-2xl px-6 py-3 ${
-                      msg.senderId === auth.currentUser?.uid
-                        ? "bg-blue-500 text-white"
-                        : "bg-gray-200 dark:bg-zinc-900"
-                    }`}
-                  >
-                    <div className="text-sm font-medium mb-1 text-right">
-                      {msg.username}
-                    </div>
-                    <div className="text-right">{msg.text}</div>
-                    <div className="text-right text-[8pt]">
-                      {convertTimeStamp(msg.timestamp)}
-                    </div>
-                  </div>
-                </ContextMenuTrigger>
-                <ContextMenuContent>
-                  <ContextMenuItem onClick={() => deleteMessage(msg.id)}>
-                    Delete Message
-                  </ContextMenuItem>
-                </ContextMenuContent>
-              </ContextMenu>
-            ) : (
-              <div
-                className={`max-w-[85%] rounded-2xl px-6 py-3 ${
-                  msg.senderId === auth.currentUser?.uid
-                    ? "bg-blue-500 text-white"
-                    : "bg-gray-200 dark:bg-zinc-900"
-                }`}
-              >
-                <div className="text-sm font-medium mb-1 text-left">
-                  {msg.username}
-                </div>
-                <div className="text-left">{msg.text}</div>
-                <div className="text-left text-[8pt]">
-                  {convertTimeStamp(msg.timestamp)}
-                </div>
-              </div>
-            )}
-          </div>
-        ))}
-        <div ref={messagesEndRef} />
-      </div>
+      <MessageList
+        messages={messages}
+        onDelete={deleteMessage}
+        convertTimeStamp={convertTimeStamp}
+      />
 
       <div className="p-4 border-t">
         <div className="flex gap-2">

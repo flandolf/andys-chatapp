@@ -30,12 +30,14 @@ A modern real-time chat application built with React, Firebase, and shadcn/ui co
 ### Installation
 
 1. Clone the repository:
+
 ```bash
 git clone https://github.com/yourusername/shadcnchat.git
 cd shadcnchat
 ```
 
 2. Install dependencies:
+
 ```bash
 npm install
 # or
@@ -43,10 +45,9 @@ yarn install
 ```
 
 3. Create a Firebase project and obtain your configuration
-
 4. Update the Firebase configuration in `src/App.tsx` with your credentials
-
 5. Start the development server:
+
 ```bash
 npm run dev
 # or
