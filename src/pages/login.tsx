@@ -32,7 +32,8 @@ function LoginPage() {
       }
     } catch (e) {
       console.error(e);
-      alert(e instanceof Error ? e.message : "An error occurred during login");
+      setAlertMessage(e instanceof Error ? e.message : "An error occurred during login");
+      setShowAlert(true);
     }
   };
 
