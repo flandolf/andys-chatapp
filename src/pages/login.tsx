@@ -51,9 +51,8 @@ function LoginPage() {
   return (
     <div className="flex flex-col md:flex-row">
       <div className="w-full md:w-1/2 bg-neutral-900 p-6 md:p-20 md:h-screen">
-        <h1 className="text-3xl font-semibold">shadcn chat</h1>
-        <p>by flandolf.</p>
-        <p className="absolute bottom-6 left-6 font-semibold">(c) 2024</p>
+        <h1 className="text-3xl font-semibold">andy's chat</h1>
+        <p className="absolute bottom-6 left-6 font-semibold">(c) 2025</p>
       </div>
       <div className="w-full md:w-1/2 p-6 md:p-20 flex flex-col justify-center space-y-6 md:h-screen">
         <p className="text-3xl font-semibold">Login</p>

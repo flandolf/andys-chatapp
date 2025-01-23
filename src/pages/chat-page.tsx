@@ -94,7 +94,7 @@ export function ChatPage() {
         updatedMessages.push({
           id: doc.id,
           text: doc.data().text,
-          timestamp: doc.data().timestamp,
+          timestamp: doc.data().timestamp.toDate(),
           senderId: doc.data().senderId,
           username: doc.data().username,
         });
@@ -124,6 +124,14 @@ export function ChatPage() {
       await updateProfile(auth.currentUser, { displayName: username }); // Update the username
       setUsername(""); // Clear the input field
     }
+  };
+
+  const convertTimeStamp = (timestamp: Date) => {
+    const date = new Date(timestamp);
+    const hours = date.getHours().toString().padStart(2, "0");
+    const minutes = date.getMinutes().toString().padStart(2, "0");
+
+    return `${hours}:${minutes}`;
   };
 
   return (
@@ -173,10 +181,13 @@ export function ChatPage() {
                         : "bg-gray-200 dark:bg-zinc-900"
                     }`}
                   >
-                    <div className="text-sm font-medium mb-1">
+                    <div className="text-sm font-medium mb-1 text-right">
                       {msg.username}
                     </div>
-                    <div>{msg.text}</div>
+                    <div className="text-right">{msg.text}</div>
+                    <div className="text-right text-[8pt]">
+                      {convertTimeStamp(msg.timestamp)}
+                    </div>
                   </div>
                 </ContextMenuTrigger>
                 <ContextMenuContent>
@@ -193,8 +204,13 @@ export function ChatPage() {
                     : "bg-gray-200 dark:bg-zinc-900"
                 }`}
               >
-                <div className="text-sm font-medium mb-1">{msg.username}</div>
-                <div>{msg.text}</div>
+                <div className="text-sm font-medium mb-1 text-left">
+                  {msg.username}
+                </div>
+                <div className="text-left">{msg.text}</div>
+                <div className="text-left text-[8pt]">
+                  {convertTimeStamp(msg.timestamp)}
+                </div>
               </div>
             )}
           </div>
@@ -207,7 +223,7 @@ export function ChatPage() {
           <Input
             value={message}
             onChange={(e) => setMessage(e.target.value)}
-            onKeyPress={(e) => {
+            onKeyDown={(e) => {
               if (e.key === "Enter") {
                 sendMessage();
               }
