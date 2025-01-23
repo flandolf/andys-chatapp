@@ -28,7 +28,7 @@ function App() {
 
   if (loading) {
     return (
-      <div className="flex flex-col justify-center align-middle">
+      <div className="flex h-screen items-center justify-center">
         <Spinner />
       </div>
     );
