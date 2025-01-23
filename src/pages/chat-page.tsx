@@ -1,31 +1,35 @@
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import Message from "@/components/message";
 
 import { getAuth, updateProfile } from "firebase/auth";
 import { initializeApp } from "firebase/app";
 import {
   addDoc,
   collection,
-  deleteDoc,
-  doc,
   getFirestore,
   onSnapshot,
   orderBy,
   query,
   QuerySnapshot,
+  deleteDoc,
+  doc,
 } from "firebase/firestore";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { SendHorizontal } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
-  AlertDialogFooter,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { ModeToggle } from "@/components/mode-toggle";
+import {
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuTrigger,
+} from "@/components/ui/context-menu";
 
 interface Message {
   id: string;
@@ -58,6 +62,7 @@ export function ChatPage() {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_, setCurrentUser] = useState<UserData | null>(null);
   const [username, setUsername] = useState<string>("");
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const sendMessage = async () => {
     if (message.trim() !== "") {
@@ -70,6 +75,14 @@ export function ChatPage() {
           : auth.currentUser!.email,
       });
       setMessage("");
+    }
+  };
+
+  const deleteMessage = async (messageId: string) => {
+    try {
+      await deleteDoc(doc(db, "messages", messageId));
+    } catch (error) {
+      console.error("Error deleting message:", error);
     }
   };
 
@@ -100,6 +113,12 @@ export function ChatPage() {
     };
   }, []);
 
+  useEffect(() => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messages]);
+
   const handleChangeUsername = async () => {
     if (auth.currentUser) {
       await updateProfile(auth.currentUser, { displayName: username }); // Update the username
@@ -108,96 +127,97 @@ export function ChatPage() {
   };
 
   return (
-    <div className="flex flex-col h-screen">
-      <div className="flex flex-col h-screen border-b">
-        <div className="flex-1 flex border-r">
-          <div className="flex-1 flex flex-col">
-            <div className="flex h-12 items-center px-4 border-b">
-              <div className="flex items-center gap-2">
-                <div className="font-semibold">
-                  {auth.currentUser?.displayName
-                    ? auth.currentUser?.displayName
-                    : auth.currentUser?.email}
-                </div>
-                <AlertDialog>
-                  <AlertDialogTrigger>Change Username</AlertDialogTrigger>
-                  <AlertDialogContent>
-                    <p className="text-lg font-semibold">Change Username</p>
-                    <Input
-                      placeholder="New Username"
-                      type="text"
-                      value={username}
-                      onChange={(e) => {
-                        setUsername(e.target.value);
-                      }}
-                    />
-                    <AlertDialogFooter>
-                      <AlertDialogCancel>Cancel</AlertDialogCancel>
-                      <AlertDialogAction onClick={handleChangeUsername}>
-                        Submit
-                      </AlertDialogAction>
-                    </AlertDialogFooter>
-                  </AlertDialogContent>
-                </AlertDialog>
-              </div>
-              <div
-                className="
-                flex
-                items-center
-                gap-2
-                ml-auto"
-              >
-                <ModeToggle />
-                <Button
-                  size="sm"
-                  className="ml-auto"
-                  onClick={() => {
-                    auth.signOut();
-                  }}
-                >
-                  Log out
-                </Button>
-              </div>
-            </div>
-            <div className="flex-1 flex flex-col justify-end gap-4 p-4">
-              {messages.map((message) => (
-                <Message
-                  key={message.id}
-                  messageID={message.id}
-                  author={message.username}
-                  content={message.text}
-                  authorID={message.senderId}
-                  currentUser={auth.currentUser!.uid}
-                  onDelete={() => {
-                    deleteDoc(doc(messagesCollection, message.id));
-                  }}
+    <div className="flex h-screen flex-col bg-gray-100 dark:bg-black">
+      <div className="flex items-center justify-between p-4 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <h1 className="text-xl font-semibold">Chat</h1>
+        <div className="flex items-center gap-4">
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button variant="outline">Change Username</Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <div className="flex gap-4">
+                <Input
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  placeholder="New username"
                 />
-              ))}
-            </div>
-            <div
-              className="
-              flex items-center
-              gap-2
-              p-4
-            "
-            >
-              <Input
-                placeholder="Type a message"
-                type="text"
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    sendMessage();
-                    setMessage("");
-                  }
-                }}
-              />
-              <Button onClick={sendMessage} size="icon">
-                <SendHorizontal />
-              </Button>
-            </div>
+                <AlertDialogAction onClick={handleChangeUsername}>
+                  Save
+                </AlertDialogAction>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+              </div>
+            </AlertDialogContent>
+          </AlertDialog>
+          <ModeToggle />
+        </div>
+      </div>
+
+      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+        {messages.map((msg) => (
+          <div
+            key={msg.id}
+            className={`flex ${
+              msg.senderId === auth.currentUser?.uid
+                ? "justify-end"
+                : "justify-start"
+            }`}
+          >
+            {msg.senderId === auth.currentUser?.uid ? (
+              <ContextMenu>
+                <ContextMenuTrigger>
+                  <div
+                    className={`rounded-2xl px-6 py-3 ${
+                      msg.senderId === auth.currentUser?.uid
+                        ? "bg-blue-500 text-white"
+                        : "bg-gray-200 dark:bg-zinc-900"
+                    }`}
+                  >
+                    <div className="text-sm font-medium mb-1">
+                      {msg.username}
+                    </div>
+                    <div>{msg.text}</div>
+                  </div>
+                </ContextMenuTrigger>
+                <ContextMenuContent>
+                  <ContextMenuItem onClick={() => deleteMessage(msg.id)}>
+                    Delete Message
+                  </ContextMenuItem>
+                </ContextMenuContent>
+              </ContextMenu>
+            ) : (
+              <div
+                className={`max-w-[85%] rounded-2xl px-6 py-3 ${
+                  msg.senderId === auth.currentUser?.uid
+                    ? "bg-blue-500 text-white"
+                    : "bg-gray-200 dark:bg-zinc-900"
+                }`}
+              >
+                <div className="text-sm font-medium mb-1">{msg.username}</div>
+                <div>{msg.text}</div>
+              </div>
+            )}
           </div>
+        ))}
+        <div ref={messagesEndRef} />
+      </div>
+
+      <div className="p-4 border-t">
+        <div className="flex gap-2">
+          <Input
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            onKeyPress={(e) => {
+              if (e.key === "Enter") {
+                sendMessage();
+              }
+            }}
+            placeholder="Type a message..."
+            className="flex-1"
+          />
+          <Button onClick={sendMessage}>
+            <SendHorizontal className="h-4 w-4" />
+          </Button>
         </div>
       </div>
     </div>
