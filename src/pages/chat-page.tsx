@@ -43,6 +43,7 @@ export function ChatPage() {
         username: auth.currentUser!.displayName
           ? auth.currentUser!.displayName
           : auth.currentUser!.email,
+        email: auth.currentUser?.email,
       });
       setMessage("");
     }
