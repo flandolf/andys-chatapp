@@ -1,30 +1,77 @@
-# React + TypeScript + Vite
+# Andy's Chatapp
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern real-time chat application built with React, Firebase, and shadcn/ui components. Experience seamless communication with a beautiful, responsive interface and feature-rich functionality.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Real-time Messaging**: Instant message delivery and updates
+- **User Authentication**: Secure Firebase authentication system
+- **Dark/Light Mode**: Toggle between dark and light themes
+- **Username Customization**: Ability to change display names
+- **Message Management**: Delete your own messages with right-click context menu
+- **Responsive Design**: Works seamlessly across all device sizes
+- **Modern UI**: Built with shadcn/ui components for a polished look
 
-## Expanding the ESLint configuration
+## Tech Stack
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+- **Frontend**: React with TypeScript
+- **UI Components**: shadcn/ui
+- **Styling**: Tailwind CSS
+- **Backend/Database**: Firebase (Authentication & Firestore)
+- **Build Tool**: Vite
 
-- Configure the top-level `parserOptions` property like this:
+## Getting Started
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
+### Prerequisites
+
+- Node.js (v14 or higher)
+- npm or yarn
+
+### Installation
+
+1. Clone the repository:
+```bash
+git clone https://github.com/yourusername/shadcnchat.git
+cd shadcnchat
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+2. Install dependencies:
+```bash
+npm install
+# or
+yarn install
+```
+
+3. Create a Firebase project and obtain your configuration
+
+4. Update the Firebase configuration in `src/App.tsx` with your credentials
+
+5. Start the development server:
+```bash
+npm run dev
+# or
+yarn dev
+```
+
+## Usage
+
+1. Register/Login with your email
+2. Set your display name using the "Change Username" button
+3. Start chatting in real-time
+4. Use the theme toggle to switch between dark and light modes
+5. Right-click on your messages to delete them
+
+## Development
+
+- `npm run dev`: Start development server
+- `npm run build`: Build for production
+- `npm run preview`: Preview production build
+- `npm run lint`: Run ESLint
+
+## License
+
+MIT
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
